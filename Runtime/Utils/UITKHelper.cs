@@ -11,6 +11,9 @@ namespace DebugTools.Utils
 {
     public static class UITKHelper
     {
+        private const float MinResizableWindowWidth = 240f;
+        private const float MinResizableWindowHeight = 160f;
+
         public static void LoadUxml(string name, Action<VisualTreeAsset> callback)
         {
             GameManager.Instance.Assets.Load($"Assets/Modules/DebugTools/Assets/UI/{name}.uxml", callback);
@@ -28,14 +31,34 @@ namespace DebugTools.Utils
                 {
                     IsMovingEnabled = true,
                     CheckScreenBounds = true
+                },
+                ResizeOptions = new ResizeOptions
+                {
+                    IsResizingEnabled = true,
+                    CheckScreenBounds = true,
+                    MinWidth = MinResizableWindowWidth,
+                    MinHeight = MinResizableWindowHeight
                 }
             };
 
             // Create the window
             Object.Instantiate(uxml);
             UIDocument window = Window.Create(windowOptions, uxml);
+            ConfigureResizableRoot(window);
             window.panelSettings.sortingOrder = 9999;
             return window;
+        }
+
+        private static void ConfigureResizableRoot(UIDocument window)
+        {
+            if (window.rootVisualElement.childCount == 0)
+            {
+                return;
+            }
+
+            VisualElement root = window.rootVisualElement[0];
+            root.style.maxWidth = StyleKeyword.None;
+            root.style.maxHeight = StyleKeyword.None;
         }
     }
 }
