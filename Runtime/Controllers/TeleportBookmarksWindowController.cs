@@ -498,8 +498,9 @@ namespace DebugTools.Runtime.Controllers
             switch (bookmark.Type)
             {
                 case BookmarkType.Orbit:
-                    bookmark.OrbitState.epoch += Game.UniverseModel.UniverseTime;
-                    Game.SpaceSimulation.TeleportSimObjectToOrbit(vesselGUID, bookmark.OrbitState, true);
+                    KeplerOrbitState orbitState = bookmark.OrbitState;
+                    orbitState.epoch += Game.UniverseModel.UniverseTime;
+                    Game.SpaceSimulation.TeleportSimObjectToOrbit(vesselGUID, orbitState, true);
                     break;
                 case BookmarkType.Surface:
                     Game.SpaceSimulation.TeleportSimObjectToSurface(vesselGUID, bookmark.State);
